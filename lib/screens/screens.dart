@@ -734,10 +734,10 @@ class ManagementHubScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
         children: <Widget>[
           const SectionTitle('⚙️ Centre de gestion', sub: 'Version pro prête pour évoluer vers une vraie app métier'),
-          AppCard(
-            child: Column(
+          const AppCard(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const <Widget>[
+              children: <Widget>[
                 CardTitle('✅ DISPONIBLE MAINTENANT'),
                 _HubTile(emoji: '🐑', title: 'Cheptel', subtitle: 'Mouvements, stock actuel, historique rapide'),
                 _HubTile(emoji: '💸', title: 'Dépenses', subtitle: 'Saisie mobile, totaux, répartition par catégorie'),
@@ -746,10 +746,10 @@ class ManagementHubScreen extends StatelessWidget {
               ],
             ),
           ),
-          AppCard(
-            child: Column(
+          const AppCard(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const <Widget>[
+              children: <Widget>[
                 CardTitle('🚀 PRÊT POUR LA PROCHAINE ÉTAPE'),
                 _HubTile(emoji: '🏡', title: 'Multi-fermes', subtitle: 'Ajouter Ferme 1 / Ferme 2 et filtrage global'),
                 _HubTile(emoji: '🌾', title: 'Agriculture', subtitle: 'Cultures, activités, récoltes, entretien'),

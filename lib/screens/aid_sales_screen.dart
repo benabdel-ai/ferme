@@ -36,7 +36,7 @@ class _AidSalesScreenState extends State<AidSalesScreen> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       children: <Widget>[
-        SectionTitle('🐑 Vente moutons Aïd', sub: 'Réservation et vente عيد الأضحى'),
+        const SectionTitle('🐑 Vente moutons Aïd', sub: 'Réservation et vente عيد الأضحى'),
         _AidStats(provider: provider),
         const SizedBox(height: 14),
         _TopTabs(current: _tab, onChanged: (v) => setState(() => _tab = v)),
