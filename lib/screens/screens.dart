@@ -735,7 +735,7 @@ class ManagementHubScreen extends StatelessWidget {
         children: <Widget>[
           const SectionTitle('⚙️ Centre de gestion', sub: 'Version pro prête pour évoluer vers une vraie app métier'),
           const AppCard(
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 CardTitle('✅ DISPONIBLE MAINTENANT'),
@@ -747,7 +747,7 @@ class ManagementHubScreen extends StatelessWidget {
             ),
           ),
           const AppCard(
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 CardTitle('🚀 PRÊT POUR LA PROCHAINE ÉTAPE'),
