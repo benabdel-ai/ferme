@@ -11,6 +11,26 @@ import '../models/ferme_models.dart';
 import '../models/models.dart';
 import 'seed_data.dart';
 
+class ShareParams {
+  const ShareParams({
+    required this.files,
+    this.text,
+  });
+
+  final List<XFile> files;
+  final String? text;
+}
+
+class SharePlus {
+  SharePlus._();
+
+  static final SharePlus instance = SharePlus._();
+
+  Future<void> share(ShareParams params) {
+    return Share.shareXFiles(params.files, text: params.text);
+  }
+}
+
 class DatabaseService {
   DatabaseService._();
 
