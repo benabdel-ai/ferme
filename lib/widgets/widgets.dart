@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../models/models.dart';
+import '../providers/app_provider.dart';
 import '../theme.dart';
 
 final NumberFormat _moneyFormatter = NumberFormat('#,##0.##', 'fr_FR');
@@ -614,6 +616,83 @@ class EmptyState extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Ferme Filter Bar ─────────────────────────────────────────────────────────
+
+class FermeFilterBar extends StatelessWidget {
+  const FermeFilterBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.watch<AppProvider>();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      child: Row(
+        children: <Widget>[
+          _chip(context, provider, 'all', '🌍 Toutes'),
+          const SizedBox(width: 8),
+          _chip(context, provider, 'rhamna', '🐑 Rhamna'),
+          const SizedBox(width: 8),
+          _chip(context, provider, 'srahna', '🫒 Srahna'),
+        ],
+      ),
+    );
+  }
+
+  Widget _chip(
+      BuildContext context, AppProvider provider, String value, String label) {
+    final selected = provider.fermeFilter == value;
+    return GestureDetector(
+      onTap: () => provider.setFermeFilter(value),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.green2 : AppColors.bg2,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: selected ? AppColors.green2 : AppColors.border,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w800,
+            color: selected ? Colors.white : AppColors.text2,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Ferme Badge ──────────────────────────────────────────────────────────────
+
+class FermeBadge extends StatelessWidget {
+  const FermeBadge(this.fermeId, {super.key});
+  final String fermeId;
+
+  @override
+  Widget build(BuildContext context) {
+    final isRhamna = fermeId == 'rhamna';
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: isRhamna ? AppColors.blueBg : AppColors.orangeBg,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        isRhamna ? '🐑 Rhamna' : '🫒 Srahna',
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w800,
+          color: isRhamna ? AppColors.blue2 : AppColors.orange2,
         ),
       ),
     );

@@ -179,17 +179,36 @@ class _DepFormState extends State<_DepForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   double _montant = 0;
   DateTime _date = DateTime.now();
-  String _categorie = depCategories.first;
+  String _categorie = '';
   String _rem = '';
+  String _fermeId = 'rhamna';
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = context.read<AppProvider>();
+    final filter = provider.fermeFilter;
+    _fermeId = filter == 'all' ? 'rhamna' : filter;
+    final cats = provider.depCatLabels;
+    if (cats.isNotEmpty) _categorie = cats.first;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final cats = context.watch<AppProvider>().depCatLabels;
+    if (_categorie.isEmpty && cats.isNotEmpty) _categorie = cats.first;
     return _Sheet(
       title: '💸 Ajouter une dépense',
       child: Form(
         key: _formKey,
         child: Column(
           children: <Widget>[
+            _label('Ferme'),
+            _FermeSelector(
+              value: _fermeId,
+              onChanged: (v) => setState(() => _fermeId = v),
+            ),
+            const SizedBox(height: 14),
             Row(
               children: <Widget>[
                 Expanded(
@@ -226,10 +245,8 @@ class _DepFormState extends State<_DepForm> {
             const SizedBox(height: 14),
             _label('Catégorie'),
             _dropdown<String>(
-              depCategories
-                  .map((cat) => DropdownMenuItem<String>(value: cat, child: Text(cat)))
-                  .toList(),
-              _categorie,
+              cats.map((cat) => DropdownMenuItem<String>(value: cat, child: Text(cat))).toList(),
+              cats.contains(_categorie) ? _categorie : (cats.isNotEmpty ? cats.first : _categorie),
               (value) => setState(() => _categorie = value ?? _categorie),
             ),
             const SizedBox(height: 14),
@@ -266,6 +283,7 @@ class _DepFormState extends State<_DepForm> {
             date: _date,
             categorie: _categorie,
             remarque: _rem,
+            fermeId: _fermeId,
           ),
         );
 
@@ -303,17 +321,36 @@ class _RevFormState extends State<_RevForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   double _montant = 0;
   DateTime _date = DateTime.now();
-  String _categorie = revCategories.first;
+  String _categorie = '';
   String _rem = '';
+  String _fermeId = 'rhamna';
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = context.read<AppProvider>();
+    final filter = provider.fermeFilter;
+    _fermeId = filter == 'all' ? 'rhamna' : filter;
+    final cats = provider.revCatLabels;
+    if (cats.isNotEmpty) _categorie = cats.first;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final cats = context.watch<AppProvider>().revCatLabels;
+    if (_categorie.isEmpty && cats.isNotEmpty) _categorie = cats.first;
     return _Sheet(
       title: '💰 Ajouter un revenu',
       child: Form(
         key: _formKey,
         child: Column(
           children: <Widget>[
+            _label('Ferme'),
+            _FermeSelector(
+              value: _fermeId,
+              onChanged: (v) => setState(() => _fermeId = v),
+            ),
+            const SizedBox(height: 14),
             Row(
               children: <Widget>[
                 Expanded(
@@ -350,10 +387,8 @@ class _RevFormState extends State<_RevForm> {
             const SizedBox(height: 14),
             _label('Catégorie'),
             _dropdown<String>(
-              revCategories
-                  .map((cat) => DropdownMenuItem<String>(value: cat, child: Text(cat)))
-                  .toList(),
-              _categorie,
+              cats.map((cat) => DropdownMenuItem<String>(value: cat, child: Text(cat))).toList(),
+              cats.contains(_categorie) ? _categorie : (cats.isNotEmpty ? cats.first : _categorie),
               (value) => setState(() => _categorie = value ?? _categorie),
             ),
             const SizedBox(height: 14),
@@ -390,6 +425,7 @@ class _RevFormState extends State<_RevForm> {
             date: _date,
             categorie: _categorie,
             remarque: _rem,
+            fermeId: _fermeId,
           ),
         );
 
@@ -574,4 +610,51 @@ Widget _cancelBtn(BuildContext context) {
       ),
     ),
   );
+}
+
+class _FermeSelector extends StatelessWidget {
+  const _FermeSelector({required this.value, required this.onChanged});
+  final String value;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        _btn('rhamna', '🐑 Rhamna'),
+        const SizedBox(width: 10),
+        _btn('srahna', '🫒 Srahna'),
+      ],
+    );
+  }
+
+  Widget _btn(String v, String label) {
+    final selected = value == v;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => onChanged(v),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: selected ? AppColors.green2 : AppColors.bg3,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: selected ? AppColors.green2 : AppColors.border,
+            ),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+                color: selected ? Colors.white : AppColors.text2,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

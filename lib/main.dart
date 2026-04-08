@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/app_provider.dart';
+import 'screens/cultures_screen.dart';
+import 'screens/equipe_screen.dart';
 import 'screens/screens.dart';
-import 'screens/aid_sales_screen.dart';
 import 'theme.dart';
 import 'widgets/form_sheet.dart';
 
@@ -54,32 +55,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _index = 0;
-
-  static const List<Widget> _screens = <Widget>[
-    DashboardScreen(),
-    CheptelScreen(),
-    DepensesScreen(),
-    RevenusScreen(),
-    HistoriqueScreen(),
-    AidSalesScreen(),
-  ];
+  String _selectedCheptelCategory = 'femelles';
 
   static const List<String> _labels = <String>[
     'Accueil',
+    'Cultures',
+    'Équipe',
     'Cheptel',
-    'Dépenses',
-    'Revenus',
-    'Historique',
-    'Aïd',
+    'Finances',
   ];
 
   static const List<IconData> _icons = <IconData>[
     Icons.space_dashboard_rounded,
+    Icons.grass_rounded,
+    Icons.people_rounded,
     Icons.pets_rounded,
-    Icons.receipt_long_rounded,
-    Icons.payments_rounded,
-    Icons.history_rounded,
-    Icons.sell_rounded,
+    Icons.account_balance_wallet_rounded,
   ];
 
   @override
@@ -105,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: const Center(
-                  child: Text('🌿', style: TextStyle(fontSize: 48)),
+                  child: Text('🐑', style: TextStyle(fontSize: 48)),
                 ),
               ),
               const SizedBox(height: 18),
@@ -119,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Chargement des données...',
+                'Chargement des donnees...',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
@@ -162,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(18),
               ),
               child: const Center(
-                child: Text('🌿', style: TextStyle(fontSize: 24)),
+                child: Text('🐑', style: TextStyle(fontSize: 24)),
               ),
             ),
             const SizedBox(width: 10),
@@ -179,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Text(
-                  'Élevage & suivi financier',
+                  'Elevage & suivi financier',
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
@@ -238,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: SafeArea(child: _screens[_index]),
+      body: SafeArea(child: _buildScreen()),
       floatingActionButton: _buildFab(context),
       bottomNavigationBar: SafeArea(
         top: false,
@@ -257,38 +248,55 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildScreen() {
+    switch (_index) {
+      case 0:
+        return DashboardScreen(
+          onOpenCheptelCategory: (categoryId) {
+            setState(() {
+              _selectedCheptelCategory = categoryId;
+              _index = 3;
+            });
+          },
+          onOpenFinances: () => setState(() => _index = 4),
+        );
+      case 1:
+        return const CulturesScreen();
+      case 2:
+        return const EquipeScreen();
+      case 3:
+        return CheptelScreen(initialCategory: _selectedCheptelCategory);
+      case 4:
+        return const FinancesScreen();
+      default:
+        return DashboardScreen(
+          onOpenCheptelCategory: (categoryId) {
+            setState(() {
+              _selectedCheptelCategory = categoryId;
+              _index = 3;
+            });
+          },
+          onOpenFinances: () => setState(() => _index = 4),
+        );
+    }
+  }
+
   Widget _buildFab(BuildContext context) {
     switch (_index) {
-      case 1:
+      case 3: // Cheptel
         return FloatingActionButton.extended(
           onPressed: () => showMvtForm(context),
           icon: const Icon(Icons.add_rounded),
           label: const Text('Mouvement'),
         );
-      case 2:
+      case 4: // Finances
         return FloatingActionButton.extended(
           onPressed: () => showDepForm(context),
           icon: const Icon(Icons.add_rounded),
           label: const Text('Dépense'),
         );
-      case 3:
-        return FloatingActionButton.extended(
-          onPressed: () => showRevForm(context),
-          icon: const Icon(Icons.add_rounded),
-          label: const Text('Revenu'),
-        );
-      case 5:
-        return FloatingActionButton.extended(
-          onPressed: () => setState(() => _index = 5),
-          icon: const Icon(Icons.sell_rounded),
-          label: const Text('Vente Aïd'),
-        );
       default:
-        return FloatingActionButton.extended(
-          onPressed: () => showMvtForm(context),
-          icon: const Icon(Icons.add_rounded),
-          label: const Text('Ajouter'),
-        );
+        return const SizedBox.shrink();
     }
   }
 

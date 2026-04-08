@@ -1,24 +1,38 @@
 workflows:
-  android-and-web:
-    name: Android + Web
+  android-release:
+    name: Android APK Release
     max_build_duration: 60
     environment:
       flutter: stable
-      xcode: latest
-      vars:
-        PACKAGE_NAME: "com.allopc.troupeau_ovins"
+      java: 17
     scripts:
-      - name: Regenerate platform folders
-        script: |
-          flutter create . --platforms=android,web
-      - name: Get Flutter packages
+      - name: Créer les dossiers plateforme Android
+        script: flutter create . --platforms=android
+      - name: Installer les dépendances
         script: flutter pub get
-      - name: Analyze project
-        script: flutter analyze
-      - name: Build APK
+      - name: Build APK release
         script: flutter build apk --release
-      - name: Build web
-        script: flutter build web --release
     artifacts:
       - build/**/outputs/**/*.apk
+    publishing:
+      email:
+        recipients:
+          - votre-email@gmail.com   # ← remplace par ton email
+        notify:
+          success: true
+          failure: true
+
+  web-release:
+    name: Web Build
+    max_build_duration: 30
+    environment:
+      flutter: stable
+    scripts:
+      - name: Créer les dossiers plateforme Web
+        script: flutter create . --platforms=web
+      - name: Installer les dépendances
+        script: flutter pub get
+      - name: Build Web
+        script: flutter build web --release
+    artifacts:
       - build/web/**
